@@ -1,12 +1,19 @@
 package com.example.api.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Customer {
@@ -23,6 +30,9 @@ public class Customer {
 	@NotEmpty
 	@Email
 	private String email;
+
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "customer")
+	private List<Address> adresses;
 
 	public Long getId() {
 		return id;
@@ -46,6 +56,15 @@ public class Customer {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@JsonIgnore
+	public List<Address> getAdresses() {
+		return adresses;
+	}
+
+	public void setAdresses(List<Address> adresses) {
+		this.adresses = adresses;
 	}
 
 }

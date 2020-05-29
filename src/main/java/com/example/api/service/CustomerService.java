@@ -1,12 +1,18 @@
 package com.example.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.example.api.domain.Customer;
+import com.example.api.domain.exception.BusinessException;
 import com.example.api.repository.CustomerRepository;
 
 @Service
@@ -27,4 +33,31 @@ public class CustomerService {
 		return repository.findById(id);
 	}
 
+	public Customer save(Customer customer) throws BusinessException {
+		validate(customer);
+		return repository.save(customer);
+	}
+
+	public void delete(Customer customer) {
+		this.repository.delete(customer);
+	}
+
+	public Page<Customer> findAll(Integer page, Integer size) {
+		return repository.findAll(PageRequest.of(page, size, Sort.by("id").ascending()));
+	}
+
+	public boolean validate(Customer customer) throws BusinessException {
+		List<String> errors = new ArrayList<>();
+		if(StringUtils.isEmpty(customer.getName())){
+			errors.add("Nome não pode estar vazio");
+		}
+		if(StringUtils.isEmpty(customer.getEmail())){
+			errors.add("E-mail não pode estar vazio");
+		}
+		if(errors.isEmpty()){
+			return true;
+		} else {
+			throw new BusinessException("Formulários incompleto", errors);
+		}
+	}
 }
