@@ -7,7 +7,7 @@ public class BusinessException extends Exception{
 
     private static final long serialVersionUID = 2030339739863941181L;
 
-    private List<String> errors = new ArrayList<>();
+    private final List<String> errors = new ArrayList<>();
 
     public BusinessException() {
         super();
@@ -15,7 +15,7 @@ public class BusinessException extends Exception{
    
     public BusinessException(String message, List<String> errors) {
         super(message);
-        this.errors = errors;
+        this.errors.addAll(errors);
     }
 
     public BusinessException(String message) {

@@ -7,12 +7,12 @@ import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
-import com.example.api.domain.exception.BusinessException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.example.api.domain.exception.BusinessException;
 
 @RestControllerAdvice
 public class ControllerAdviceCustom {
