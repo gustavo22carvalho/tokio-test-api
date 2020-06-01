@@ -31,8 +31,8 @@ public class AddressService {
         return repository.save(address);
     }
 
-    public List<Address> saveAll(List<Address> adresses) {
-        return adresses.stream().filter(address -> address.getId() == null).map(this::save)
+    public List<Address> saveAll(List<Address> addresses) {
+        return addresses.stream().filter(address -> address.getId() == null).map(this::save)
                 .collect(Collectors.toList());
     }
 

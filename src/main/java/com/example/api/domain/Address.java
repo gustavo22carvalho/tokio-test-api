@@ -6,11 +6,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity   
 public class Address {
@@ -27,8 +27,7 @@ public class Address {
 	@NotEmpty
     private String logradouro;      //Praça da Sé",
     
-    @Column(nullable = false)
-	@NotEmpty
+    @Column
     private String complemento;     //lado ímpar",
     
     @Column(nullable = false)
@@ -43,20 +42,16 @@ public class Address {
 	@NotEmpty
     private String uf;      //SP",
     
-    @Column(nullable = false)
-	@NotEmpty
+    @Column
     private String unidade;     //"",
     
-    @Column(nullable = false)
-	@NotEmpty
+    @Column
     private String ibge;        //3550308",
     
-    @Column(nullable = false)
-	@NotEmpty
+    @Column
     private String gia;     //1004"
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Customer customer;
 
     public Long getId() {
@@ -139,10 +134,12 @@ public class Address {
         this.gia = gia;
     }
 
+    @JsonIgnore
     public Customer getCustomer() {
         return customer;
     }
 
+    @JsonProperty
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }

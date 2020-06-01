@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +31,9 @@ public class CustomerService {
 		return repository.findAllByOrderByNameAsc();
 	}
 
-	public Optional<Customer> findById(Long id) {
-		return repository.findById(id);
+	public Customer findById(Long id) {
+		return repository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("Cliente não foi encontrado"));
 	}
 
 	public Customer save(Customer customer) throws BusinessException {
@@ -59,5 +62,16 @@ public class CustomerService {
 		} else {
 			throw new BusinessException("Formulários incompleto", errors);
 		}
+	}
+
+	public Customer update(Customer customer) throws BusinessException {
+		if(customer.getId() == null){
+			throw new BusinessException("Cliente não está registrado");
+		}
+		this.validate(customer);
+		Customer customerToUpdate = this.findById(customer.getId());
+		customerToUpdate.setName(customer.getName());
+		customerToUpdate.setEmail(customer.getEmail());
+		return this.repository.save(customerToUpdate);
 	}
 }

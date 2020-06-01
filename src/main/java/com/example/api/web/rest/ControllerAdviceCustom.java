@@ -6,23 +6,20 @@ import com.example.api.domain.exception.BusinessException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
-public class ControllerAdviceCustom extends ResponseEntityExceptionHandler {
+@RestControllerAdvice
+public class ControllerAdviceCustom {
  
     @ExceptionHandler(value = { EntityNotFoundException.class })
-    protected ResponseEntity<Object> handleEntityNotFound(RuntimeException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new BusinessException(ex.getMessage()));
+    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
     
     @ExceptionHandler(value = { BusinessException.class })
-    protected ResponseEntity<Object> handleBusinessException(RuntimeException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    protected ResponseEntity<Object> handleBusinessException(BusinessException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getErrors());
     }
    
 }

@@ -10,16 +10,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 @Entity
 public class Customer {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(initialValue = 3, allocationSize = 1, name = "SEQ_CUSTOMER")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_CUSTOMER")
 	private Long id;
 
 	@Column(nullable = false)
@@ -32,7 +36,7 @@ public class Customer {
 	private String email;
 
 	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "customer")
-	private List<Address> adresses;
+	private List<Address> addresses;
 
 	public Long getId() {
 		return id;
@@ -59,12 +63,11 @@ public class Customer {
 	}
 
 	@JsonIgnore
-	public List<Address> getAdresses() {
-		return adresses;
+	public List<Address> getAddresses() {
+		return addresses;
 	}
 
-	public void setAdresses(List<Address> adresses) {
-		this.adresses = adresses;
+	public void setAddresses(List<Address> addresses) {
+		this.addresses = addresses;
 	}
-
 }
