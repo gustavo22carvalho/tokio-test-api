@@ -5,7 +5,10 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import com.example.api.domain.Address;
+import com.example.api.domain.exception.BusinessException;
 import com.example.api.repository.AddressRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +39,17 @@ public class AddressService {
                 .collect(Collectors.toList());
     }
 
-    public void delete(Address address) {
-        repository.delete(address);
+    public void delete(Address address) throws BusinessException {
+        if(this.findById(address.getId()) != null){
+            repository.delete(address);
+        }
     }
 
-    public Optional<Address> findById(Long id) {
-		return repository.findById(id);
+    public Address findById(Long id) throws BusinessException {
+        if(id == null){
+			throw new BusinessException("Identificador de endereço não pode ser vazio");
+		}
+        return repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Endereço não foi encontrado"));
 	}
 }

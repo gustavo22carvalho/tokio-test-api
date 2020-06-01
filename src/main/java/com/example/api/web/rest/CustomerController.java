@@ -53,18 +53,18 @@ public class CustomerController {
 	}
 
 	@DeleteMapping
-	public Customer delete(@RequestBody Customer customer) {
+	public Customer delete(@RequestBody Customer customer) throws BusinessException {
 		service.delete(customer);
 		return customer;
 	}
 
 	@GetMapping("/{id}")
-	public Customer findById(@PathVariable Long id) {
+	public Customer findById(@PathVariable Long id) throws BusinessException {
 		return service.findById(id);
 	}
 
 	@GetMapping("/{id}/addresses")
-	public List<Address> listAddresses(@PathVariable Long id) {
+	public List<Address> listAddresses(@PathVariable Long id) throws BusinessException {
 		return service.findById(id).getAddresses();
 	}
 

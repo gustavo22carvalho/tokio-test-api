@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 import com.example.api.domain.Address;
+import com.example.api.domain.exception.BusinessException;
 import com.example.api.service.AddressService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,33 +23,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/addresses")
 public class AddressController {
 
-    private AddressService service;
+	private AddressService service;
 
-    @Autowired
-    public AddressController(AddressService service) {
+	@Autowired
+	public AddressController(AddressService service) {
 		this.service = service;
 	}
 
 	@GetMapping
 	public List<Address> findAll() {
-        return service.findAll();
+		return service.findAll();
 	}
 
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<List<Address>> create(@RequestBody AddressWrapper addresses){
+	public ResponseEntity<List<Address>> create(@RequestBody AddressWrapper addresses) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.saveAll(addresses.getAddresses()));
 	}
 
 	@DeleteMapping
-	public Address delete(Address address){
+	public Address delete(@RequestBody Address address) throws BusinessException {
 		service.delete(address);
 		return address;
 	}
     
     @GetMapping("/{id}")
-	public Address findById(@PathVariable Long id) {
-		return service.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException("Endereço não foi encontrado"));
+	public Address findById(@PathVariable Long id) throws BusinessException {
+		return service.findById(id);
 	}
 	
 	@GetMapping("/{id}/addresses")

@@ -31,7 +31,10 @@ public class CustomerService {
 		return repository.findAllByOrderByNameAsc();
 	}
 
-	public Customer findById(Long id) {
+	public Customer findById(Long id) throws BusinessException {
+		if(id == null){
+			throw new BusinessException("Identificador de cliente não pode ser vazio");
+		}
 		return repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Cliente não foi encontrado"));
 	}
@@ -41,8 +44,10 @@ public class CustomerService {
 		return repository.save(customer);
 	}
 
-	public void delete(Customer customer) {
-		this.repository.delete(customer);
+	public void delete(Customer customer) throws BusinessException {
+		if(this.findById(customer.getId()) != null){
+			this.repository.delete(customer);
+		}
 	}
 
 	public Page<Customer> findAll(Integer page, Integer size) {
